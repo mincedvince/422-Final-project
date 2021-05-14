@@ -4,9 +4,11 @@ Deliverable: You must submit item 1, item 2, item 3, and item 4 in Final Project
 
 If you have multiple files, you may zip all files, and name your zip file as <Team name>.zip. PLEASE ONLY ZIP .X68 FILES!
 
-2. Testing file: modify the testing files (demo_test.X68) download   so that it can properly run with your program.
+2.
+Testing file: modify the testing files (demo_test.X68) download   so that it can properly run with your program.
 
-3. Documentation. 
+3. 
+Documentation. 
 
 Single line spacing, any font with 11 pts. 
 Should include all the following sections and make it as one documentation. 
@@ -32,7 +34,8 @@ You should specify the amount of the coding, as a percentage, the member did in 
 as it will be a source for the separate grading.
 
 
-4. Project demo video: You have to make a video that demonstrate your program running with a testing file.
+4. 
+Project demo video: You have to make a video that demonstrate your program running with a testing file.
 It should include the followings  (you can make it as slides and record it)
 
 List of I/O, opcode and EAs that have been completed
@@ -41,7 +44,8 @@ Demonstrate your program. Should show very clearly how to run your program, what
 gave, and show the outputs. Note that the demo file include most of, but not all of, the required opcodes. 
 Any problems that you had, or any comments
 
-5. Confidential evaluation report : Note that this is a separate file to be submitted individually. (Confidential Individual Evaluation)
+5. 
+Confidential evaluation report : Note that this is a separate file to be submitted individually. (Confidential Individual Evaluation)
 Each member of the team submits their own evaluation.
 
 What you did on the project
