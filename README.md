@@ -31,6 +31,7 @@ listing and give you a grade, without needing to run the program. Of course, I w
 You should specify the amount of the coding, as a percentage, the member did in the project. This information is VERY important
 as it will be a source for the separate grading.
 
+
 4. Project demo video: You have to make a video that demonstrate your program running with a testing file.
 It should include the followings  (you can make it as slides and record it)
 
