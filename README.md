@@ -78,6 +78,7 @@ The documentation should include enough information about your program, and clea
 Especially, since each group have different op-code options, clearly describe about them. Also the exception report should 
 provide all the exceptions of your program. Missing some exception cases mean you did not test thoroughly, and will cause some points off. 
 
+7.
 
 Progress report 1
 
