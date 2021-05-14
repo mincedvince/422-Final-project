@@ -1,6 +1,7 @@
 Deliverable: You must submit item 1, item 2, item 3, and item 4 in Final Project, and item 5 to Confidential Individual Evaluation (try not to zip)
 
-1. Source code: Please submit your source file (.X68). Your source file name should be, <Team name>.X68
+1. 
+Source code: Please submit your source file (.X68). Your source file name should be, <Team name>.X68
 
 If you have multiple files, you may zip all files, and name your zip file as <Team name>.zip. PLEASE ONLY ZIP .X68 FILES!
 
