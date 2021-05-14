@@ -85,6 +85,7 @@ Progress report 1
 2. Start designing the program by providing a simple flow-chart. At this moment, it might not be easy to design details.
 So this time, provide a flow-chart to start with, and you will have a chance to revise.
 
+
 8.
 Progress report 2
 
