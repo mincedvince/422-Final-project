@@ -78,14 +78,14 @@ The documentation should include enough information about your program, and clea
 Especially, since each group have different op-code options, clearly describe about them. Also the exception report should 
 provide all the exceptions of your program. Missing some exception cases mean you did not test thoroughly, and will cause some points off. 
 
-7.
+
 Progress report 1
 
 1. Make a table that matches all the required opcode/EA with the machine code. Please include the table in your report. 
 2. Start designing the program by providing a simple flow-chart. At this moment, it might not be easy to design details.
 So this time, provide a flow-chart to start with, and you will have a chance to revise.
 
-8.
+
 Progress report 2
 
 1. Make a subroutine that reads a user input (starting and ending address) and save them to Address registers as 
