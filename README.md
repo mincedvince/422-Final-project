@@ -63,6 +63,7 @@ Most cases, a team will share the same grade, but there will be exceptions if ne
 Each team member's project point is first given based on final product. Then, based on the confidential evaluation report, 
 members whose contribution are too low, will have additional point reduction.
 
+6.
 The program will be carefully tested for all required op-code and EAs. Here are some examples where points are deduced.
 1) If your program did not disassemble any of the 3 additional op-codes, you will got program point 0 out of 70
 2) Program cannot assemble into listing file: program point is 0 out of 70
