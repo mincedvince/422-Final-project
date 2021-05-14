@@ -52,3 +52,22 @@ Your individual grade on the project may be different from the project grade as 
 someone is not doing their fair share, then I will use that information, along with your statements to adjust the grades of the 
 individual team members. Thus, if any member or members of a project group feels that the other team member(s) are not doing, 
 or did not do, their fair share of the work the student should contact the instructor as soon as possible. 
+
+Most cases, a team will share the same grade, but there will be exceptions if necessary.
+
+Each team member's project point is first given based on final product. Then, based on the confidential evaluation report, 
+members whose contribution are too low, will have additional point reduction.
+
+The program will be carefully tested for all required op-code and EAs. Here are some examples where points are deduced.
+1) If your program did not disassemble any of the 3 additional op-codes, you will got program point 0 out of 70
+2) Program cannot assemble into listing file: program point is 0 out of 70
+3) Program crashes on non-required opcode or EA: -5
+4) Program crashes on each required opcode or EA: -7 each
+5) Each required op-code or EA which is not properly disassembled: -5 each
+6) Program does not print the address of each instruction: -5
+7) Program does not print results as one screen at a time: -5
+8) Program does not have options to restart or finish: -5
+
+The documentation should include enough information about your program, and clearly describe your product in general. 
+Especially, since each group have different op-code options, clearly describe about them. Also the exception report should 
+provide all the exceptions of your program. Missing some exception cases mean you did not test thoroughly, and will cause some points off. 
