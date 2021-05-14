@@ -5,8 +5,10 @@ Source code: Please submit your source file (.X68). Your source file name should
 
 If you have multiple files, you may zip all files, and name your zip file as <Team name>.zip. PLEASE ONLY ZIP .X68 FILES!
 
+
 2:
 Testing file: modify the testing files (demo_test.X68) download   so that it can properly run with your program.
+
 
 3: 
 Documentation. 
@@ -44,6 +46,7 @@ List of the works that have not been completed
 Demonstrate your program. Should show very clearly how to run your program, what testing file is used, what inputs you 
 gave, and show the outputs. Note that the demo file include most of, but not all of, the required opcodes. 
 Any problems that you had, or any comments
+
 
 5: 
 Confidential evaluation report : Note that this is a separate file to be submitted individually. (Confidential Individual Evaluation)
