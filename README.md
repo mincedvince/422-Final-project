@@ -79,17 +79,19 @@ Especially, since each group have different op-code options, clearly describe ab
 provide all the exceptions of your program. Missing some exception cases mean you did not test thoroughly, and will cause some points off. 
 
 7.
-Progress report 1.
-(1) Make a table that matches all the required opcode/EA with the machine code. Please include the table in your report. 
-(2) Start designing the program by providing a simple flow-chart. At this moment, it might not be easy to design details.
+Progress report 
+
+1. Make a table that matches all the required opcode/EA with the machine code. Please include the table in your report. 
+2. Start designing the program by providing a simple flow-chart. At this moment, it might not be easy to design details.
 So this time, provide a flow-chart to start with, and you will have a chance to revise. 
 
 8.
-Progress report 2.
-(1) Make a subroutine that reads a user input (starting and ending address) and save them to Address registers as 
+Progress report 
+
+1. Make a subroutine that reads a user input (starting and ending address) and save them to Address registers as 
 a hexadecimal numbers. Remember you can use up trap task #14, so you cannot automatically convert the user input 
 as hexadecimal number. You have to make a subroutine that reads the user input as string, and convert it to hexadecimal.  
-(2) Please start with a flowchart for this portion and submit the flow-chart AND the source file (.X68).
+2. Please start with a flowchart for this portion and submit the flow-chart AND the source file (.X68).
 The flowchart will help me understand your code, and also help you verify your code logic. The flowchart should be 
 included into your report. Source file should be separate. You can have an alternative way to convert it as an hexadecimal.
 If any of them is missing, this submission is considered incomplete.
