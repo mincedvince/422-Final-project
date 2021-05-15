@@ -11,46 +11,46 @@
     ORG    $1000
 START:                  ; first instruction of program
 *   Welcome Message 
-    LEA WELCOME_MESSAGE,A1 Print out welcome message
-    MOVE.B #14,D0  Display the NULL terminated string at (A1) without CR, LF
+    LEA WELCOME_MESSAGE,A1 *Print out welcome message
+    MOVE.B #14,D0  *Display the NULL terminated string at (A1) without CR, LF
     TRAP #15
 
 *   Staring address message 
 FIRST_ADDRESS    
-    LEA STARTING_ADDRESS_MESSAGE,A1 print out prompt for first address
-    MOVE.B #14,D0  Display the NULL terminated string at (A1) without CR, LF
+    LEA STARTING_ADDRESS_MESSAGE,A1 *print out prompt for first address
+    MOVE.B #14,D0  *Display the NULL terminated string at (A1) without CR, LF
     TRAP #15
     
-    MOVE.B #2,D0 Read string from keyboard and store at (A1), NULL terminated, length retuned in D1.W (max 80)
+    MOVE.B #2,D0 *Read string from keyboard and store at (A1), NULL terminated, length retuned in D1.W (max 80)
     TRAP #15
     
 *   Check length 
-    CMPI #6,D1  Check if length is greater than 6
-    BGT ERROR_LENGTH_GREATER    Branch to display error message 
+    CMPI #6,D1  *Check if length is greater than 6
+    BGT ERROR_LENGTH_GREATER    *Branch to display error message 
     
     CMPI #0,D1
-    BEQ ERROR_LENGTH_EQUAL      Branch to display error message
+    BEQ ERROR_LENGTH_EQUAL      *Branch to display error message
     
-    JSR CHECKASCII   If not error jump to subroutine for conversion
-    MOVE.L A7,StartingAddress store starting address into a storage
+    JSR CHECKASCII   *If not error jump to subroutine for conversion
+    MOVE.L A7,StartingAddress *store starting address into a storage
     
 SECOND_ADDRESS
-    LEA ENDING_ADDRESS_MESSAGE,A1 print out prompt for first address
-    MOVE.B #14,D0  Display the NULL terminated string at (A1) without CR, LF
+    LEA ENDING_ADDRESS_MESSAGE,A1 *print out prompt for first address
+    MOVE.B #14,D0  *Display the NULL terminated string at (A1) without CR, LF
     TRAP #15
     
-    MOVE.B #2,D0 Read string from keyboard and store at (A1), NULL terminated, length retuned in D1.W (max 80)
+    MOVE.B #2,D0 *Read string from keyboard and store at (A1), NULL terminated, length retuned in D1.W (max 80)
     TRAP #15
     
 *   Check length 
-    CMPI #6,D1  Check if length is greater than 6
-    BGT ERROR_LENGTH_GREATER    Branch to display error message 
+    CMPI #6,D1  *Check if length is greater than 6
+    BGT ERROR_LENGTH_GREATER    *Branch to display error message 
     
     CMPI #0,D1
-    BEQ ERROR_LENGTH_EQUAL      Branch to display error message
+    BEQ ERROR_LENGTH_EQUAL      *Branch to display error message
     
-    JSR CHECKASCII   If not error jump to subroutine for conversion
-    MOVE.L A7,EndingAddress store ending into a storage
+    JSR CHECKASCII   *If not error jump to subroutine for conversion
+    MOVE.L A7,EndingAddress *store ending into a storage
     
     *continue here................
  
@@ -65,47 +65,47 @@ SECOND_ADDRESS
 *   Use D4 to check length
 *   Use A6 to store the final hex address
 CHECKASCII 
-    MOVE.B (A1)+,D2   read byte and byte and load it into D2 for checking and converting
+    MOVE.B (A1)+,D2   *read byte and byte and load it into D2 for checking and converting
         
-    CMPI.B #$39,D2  compare value within D2 to 39
-    BLT NUMBER      if D2 is less than 39, then it is a number
+    CMPI.B #$39,D2  *compare value within D2 to 39
+    BLT NUMBER      *if D2 is less than 39, then it is a number
 
-    CMPI.B #$39,D2 compare value within D2 to 39
-    BGT LETTER     if D2 is greater than 39, then it is a letter
+    CMPI.B #$39,D2 *compare value within D2 to 39
+    BGT LETTER     *if D2 is greater than 39, then it is a letter
 
     
 NUMBER
-    CMPI.B #$30,D2 compare value within D2 to 30
-    BLT NOTVALID   if D2 is less than 30, then it is not a number or letter
+    CMPI.B #$30,D2 *compare value within D2 to 30
+    BLT NOTVALID   *if D2 is less than 30, then it is not a number or letter
     
     SUBI.B #$30,D2
-    BRA COMBINE    Branch to combine to begin the process
+    BRA COMBINE    *Branch to combine to begin the process
 
 
 LETTER
-    CMPI.B #$46,D2 compare value within D2 to 46
-    BGT NOTVALID   if D2 is greater than 46 then it is out of hex for A-F
+    CMPI.B #$46,D2 *compare value within D2 to 46
+    BGT NOTVALID   *if D2 is greater than 46 then it is out of hex for A-F
     
     SUBI.B #$37,D2
-    BRA COMBINE    Branch to combine to begin the process
+    BRA COMBINE    *Branch to combine to begin the process
     
     
 
 NOTVALID
-    MOVEA.L #$00000000,A7 Error in conversion, set A7 to 000000 for error
-    RTS  return from subroutine
+    MOVEA.L #$00000000,A7 *Error in conversion, set A7 to 000000 for error
+    RTS  *return from subroutine
 
 COMBINE
-    ADD.B D2,D3 Add hex from D2 to D3 for combining
-    ADDI.B #1,D4 increament length by 1 each time
-    CMP.B D1,D4  check if current length equal maximum length
-    BEQ EXITJSR  Branch to exit subroutine when length are equal
-    LSL.L #4,D3 shift 4 bit to the left for adding
-    BRA CHECKASCII loop again to continue converting
+    ADD.B D2,D3 *Add hex from D2 to D3 for combining
+    ADDI.B #1,D4 *increament length by 1 each time
+    CMP.B D1,D4  *check if current length equal maximum length
+    BEQ EXITJSR  *Branch to exit subroutine when length are equal
+    LSL.L #4,D3 *shift 4 bit to the left for adding
+    BRA CHECKASCII *loop again to continue converting
     
 EXITJSR
     MOVEA.L D3,A6
-    RTS  return from subroutine
+    RTS  *return from subroutine
 
 *   Subrountine that reads a user input and save them to address register as hexadecimal number. END *
 
