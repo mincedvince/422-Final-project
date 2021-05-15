@@ -32,7 +32,25 @@ FIRST_ADDRESS
     BEQ ERROR_LENGTH_EQUAL      Branch to display error message
     
     JSR CHECKASCII   If not error jump to subroutine for conversion
+    MOVE.L A7,StartingAddress store starting address into a storage
     
+SECOND_ADDRESS
+    LEA ENDING_ADDRESS_MESSAGE,A1 print out prompt for first address
+    MOVE.B #14,D0  Display the NULL terminated string at (A1) without CR, LF
+    TRAP #15
+    
+    MOVE.B #2,D0 Read string from keyboard and store at (A1), NULL terminated, length retuned in D1.W (max 80)
+    TRAP #15
+    
+*   Check length 
+    CMPI #6,D1  Check if length is greater than 6
+    BGT ERROR_LENGTH_GREATER    Branch to display error message 
+    
+    CMPI #0,D1
+    BEQ ERROR_LENGTH_EQUAL      Branch to display error message
+    
+    JSR CHECKASCII   If not error jump to subroutine for conversion
+    MOVE.L A7,EndingAddress store ending into a storage
     
     *continue here................
  
@@ -123,7 +141,8 @@ STARTING_ADDRESS_MESSAGE   DC.B    'Please enter the starting address in hexadec
 ENDING_ADDRESS_MESSAGE     DC.B    'Please enter the ending address hexadecimal length of 6: ',0
 ERROR_MESSAGE_LENGTH_GREATER   DC.B    'Please re-enter the address with length less than 6',0
 ERROR_MESSAGE_LENGTH_EQUAL     DC.B    'Please enter something here for the first address',0
-
+StartingAddress     DS.L    1
+EndingAddress       DS.L    1
     END    START        ; last line of source
     
     
