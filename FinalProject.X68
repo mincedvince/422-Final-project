@@ -127,8 +127,8 @@ ERROR_LENGTH_GREATER
 
 
 * Put variables and constants here
-CR EQU $0D  ASCII code for Carriage Return
-LF EQU $0A  ASCII code for Line Feed
+CR EQU $0D  *ASCII code for Carriage Return
+LF EQU $0A  *ASCII code for Line Feed
 WELCOME_MESSAGE DC.B '-------------A Disassembler for the Motorola MC68000 Microprocessor-------------',CR,LF 
                 DC.B 'Welcome to our program',CR,LF
                 DC.B 'This program is created by group with the following member:',CR,LF
