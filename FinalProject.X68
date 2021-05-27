@@ -32,8 +32,8 @@ FIRST_ADDRESS
     BEQ ERROR_LENGTH_EQUAL      *Branch to display error message
     
     JSR CHECKASCII   *If not error jump to subroutine for conversion
-    MOVE.L A7,StartingAddress *store starting address into a storage
-    
+    MOVE.L D5,StartingAddress *store starting address into a storage
+    CLR.L D5
 SECOND_ADDRESS
     LEA ENDING_ADDRESS_MESSAGE,A1 *print out prompt for first address
     MOVE.B #14,D0  *Display the NULL terminated string at (A1) without CR, LF
@@ -50,8 +50,8 @@ SECOND_ADDRESS
     BEQ ERROR_LENGTH_EQUAL      *Branch to display error message
     
     JSR CHECKASCII   *If not error jump to subroutine for conversion
-    MOVE.L A7,EndingAddress *store ending into a storage
-    
+    MOVE.L D5,EndingAddress *store ending into a storage
+    CLR.L D5
     *continue here................
  
 *-----------------------------------------------------------------------------------------------------------*
@@ -104,7 +104,11 @@ COMBINE
     BRA CHECKASCII *loop again to continue converting
     
 EXITJSR
-    MOVEA.L D3,A6
+    MOVEA.L D3,D5
+    CLR.L D1
+    CLR.L D2
+    CLR.L D3
+    CLR.L D3
     RTS  *return from subroutine
 
 *   Subrountine that reads a user input and save them to address register as hexadecimal number. END *
