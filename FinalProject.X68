@@ -521,71 +521,124 @@ EXITJSR
 *-----------------------------------------------------------------------------------------------------------*
 *---------------------------------------------EA-ROUTINE----------------------------------------------------*
 EFFECTIVE_ADDRESS_DECODE
-    MOVEM.L A0-A3/A5/D0-D5/D7,-(SP)
-    LEA EFFECTIVE_ADDRESS_INDEX,A1
-    CLR.L   D1
-    MOVE.W  D0,D2
-    MOVE.B  #3,D1
-    LSR.W   D1,D0
-    MULU    #6,D0
-    JSR     00(A1,D0)
-    MOVEM.L (SP)+,A0-A3/A5/D0-D5/D7
-    RTS
+    MOVEM.L A0-A3/A5/D0-D5/D7,-(SP) Save the data from registers to the stack
+    LEA EFFECTIVE_ADDRESS_INDEX,A1  Referencing the effective address table
+    CLR.L   D1 Empty data register                 
+    MOVE.W  D0,D2 Get copy of bits
+    MOVE.B  #3,D1 Store bits to shift
+    LSR.W   D1,D0 Shift to the right
+    MULU    #6,D0 ????
+    JSR     00(A1,D0) Jump to table
+    MOVEM.L (SP)+,A0-A3/A5/D0-D5/D7 Restore data from stack
+    RTS return
     
 EFFECTIVE_ADDRESS_INDEX
-    JMP     EFFECTIVE_ADRESS_INDEX000
-    JMP     EFFECTIVE_ADRESS_INDEX001
-    JMP     EFFECTIVE_ADRESS_INDEX010
-    JMP     EFFECTIVE_ADRESS_INDEX011
-    JMP     EFFECTIVE_ADRESS_INDEX100
-    JMP     EFFECTIVE_ADRESS_INDEX101
-    JMP     EFFECTIVE_ADRESS_INDEX110
-    JMP     EFFECTIVE_ADRESS_INDEX111 
+    JMP     EFFECTIVE_ADRESS_INDEX000 Direct data register
+    JMP     EFFECTIVE_ADRESS_INDEX001 Direct address register
+    JMP     EFFECTIVE_ADRESS_INDEX010 Indirect address register
+    JMP     EFFECTIVE_ADRESS_INDEX011 Indirect address register with post increment
+    JMP     EFFECTIVE_ADRESS_INDEX100 Indirect address register with pre increment
+    JMP     EFFECTIVE_ADRESS_INDEX101 Indirect address register using index
+    JMP     EFFECTIVE_ADRESS_INDEX110 Immediate effective address
+    JMP     EFFECTIVE_ADRESS_INDEX111 Not used
     
-EFFECTIVE_ADRESS_Index000
-    MOVE    D2,D0
-    ANDI    #7,D0
+EFFECTIVE_ADRESS_INDEX000
+    MOVE    D2,D0 Get effective address from D2
+    ANDI    #7,D0 Grab address register
     *BSR    SEND DATA TO BUFFER
-    RTS
+    RTS Return
     
-EFFECTIVE_ADRESS_Index001
-    MOVE    D2,D0
-    ANDI    #7,D0
+EFFECTIVE_ADRESS_INDEX001
+    MOVE    D2,D0 Get effective address from D2
+    ANDI    #7,D0 Grab address register
     *BSR    SEND DATA TO BUFFER
-    RTS
+    RTS Return
     
-EFFECTIVE_ADRESS_Index010
+EFFECTIVE_ADRESS_INDEX010
+    MOVE.W  #FIRST_BRACE,(A4)+ Open the first brace
+    CLR.L   D0 Empty data register
+    MOVE    D2,D0 Store bits
+    ANDI    #7,D0 Grab address register
+    *BSR    SEND DATA TO BUFFER
+    MOVE.W  #LAST_BRACE,(A4)+ Close brace
+    RTS return
+
+EFFECTIVE_ADRESS_INDEX011
+    MOVE.W  #FIRST_BRACE,(A4)+ Open the first brace
+    CLR.L   D0 Empty data register
+    MOVE    D2,D0 Store bits
+    ANDI    #7,D0 Grab address register
+    *BSR    SEND DATA TO BUFFER
+    MOVE.W  #LAST_BRACE,(A4)+ Close brace
+    MOVE.W  #ADD_SIGN,(A4)+ Add to the address buffer
+    RTS return
+
+EFFECTIVE_ADRESS_INDEX100
+    MOVE.W  #SUBTRACT_SIGN,(A4)+ Add to the address buffer
+    MOVE.W  #FIRST_BRACE,(A4)+ Open the first brace
+    CLR.L   D0 Empty data register
+    MOVE    D2,D0 Store bits
+    ANDI    #7,D0 Grab address register
+    *BSR    SEND DATA TO BUFFER
+    MOVE.W  #LAST_BRACE,(A4)+ Close brace
+    RTS return
+
+EFFECTIVE_ADRESS_INDEX101
+    MOVE.W  #MONEY_SIGN,(A4)+ Add to the address buffer
+    MOVE.W  (A3)+,A0 
+    MOVE.L  D0,D3
+    CLR.L   D4
+    MOVE.B  #4,D4
+    *BSR    CONVERT TO ASCII
+    MOVEA.L A3,A1
+    MOVE.W  A1,(A4)+
     MOVE.W  #FIRST_BRACE,(A4)+
     CLR.L   D0
     MOVE    D2,D0
     ANDI    #7,D0
     *BSR    SEND DATA TO BUFFER
-    MOVE.W  #LAST_BRACE,(A4)+
-    RTS
-
-EFFECTIVE_ADRESS_Index011
-    MOVE.W  #FIRST_BRACE,(A4)+
-    CLR.L   D0
-    MOVE    D2,D0
-    ANDI    #7,D0
-    *BSR    SEND DATA TO BUFFER
-    MOVE.W  #LAST_BRACE,(A4)+
-    MOVE.W  #ADD_SIGN,(A4)+
-    RTS
-
-EFFECTIVE_ADRESS_Index100
-
-
-
-EFFECTIVE_ADRESS_Index101
-
-
-
+    *FINISH THIS
+    
 EFFECTIVE_ADRESS_Index110
+    LEA SUBINDEX_JUMP_TABLE,A1 Load the subindex jump table
+    MOVE    D2,D0 Store bits
+    MULU    #6,D0 ????
+    JSR     00(A1,D0) Jump to subindex jump table
+    RTS return
 
+EFFECTIVE_ADRESS_INDEX111
+    LEA SUBINDEX_JUMP_TABLE,A1 Load the subindex jump table
+    MOVE    D2,D0 Store bits
+    ANDI    #7,D0 Get address register bits
+    MULU    #6,D0 ????
+    JSR     00(A1,D0) Jump to subindex jump table
+    RTS return
+    
+SUBINDEX_JUMP_TABLE
+    JMP EFFECTIVE_ADDRESS_SUBINDEX000
+    JMP EFFECTIVE_ADDRESS_SUBINDEX001
+    JMP EFFECTIVE_ADDRESS_SUBINDEX010
+    JMP EFFECTIVE_ADDRESS_SUBINDEX011
+    JMP EFFECTIVE_ADDRESS_SUBINDEX100
+    JMP EFFECTIVE_ADDRESS_SUBINDEX101
+    JMP EFFECTIVE_ADDRESS_SUBINDEX110
+    JMP EFFECTIVE_ADDRESS_SUBINDEX111
 
+EFFECTIVE_ADDRESS_SUBINDEX000
 
-EFFECTIVE_ADRESS_Index111
+EFFECTIVE_ADDRESS_SUBINDEX001   
+
+EFFECTIVE_ADDRESS_SUBINDEX010    
+
+EFFECTIVE_ADDRESS_SUBINDEX011    
+
+EFFECTIVE_ADDRESS_SUBINDEX100    
+
+EFFECTIVE_ADDRESS_SUBINDEX101    
+
+EFFECTIVE_ADDRESS_SUBINDEX110    
+
+EFFECTIVE_ADDRESS_SUBINDEX111        
 
 *---------------------------------------------EA-LIBRARY----------------------------------------------------*
 FIRST_BRACE             DC.B    '(',0
@@ -612,10 +665,9 @@ SUBTRACT_SIGN_SIZE      DC.W    1
 WORD_EXTENSION_SIZE     DC.W    1
 LONGWORD_EXTENSION_SIZE DC.W    1
 PROGRAM_COUNTER_SIZE    DC.W    1
-WORD_TO_ASCII           DS.W    1
+WORD_TO_ASCII           DS.W    1 
 
 
-   
 *   Display error related to length
 ERROR_LENGTH_EQUAL 
     LEA ERROR_MESSAGE_LENGTH_EQUAL,A1
@@ -645,7 +697,7 @@ WELCOME_MESSAGE DC.B '-------------A Disassembler for the Motorola MC68000 Micro
   
 STARTING_ADDRESS_MESSAGE   DC.B    'Please enter the starting address in hexadecimal length of 6: ',0
 ENDING_ADDRESS_MESSAGE     DC.B    'Please enter the ending address hexadecimal length of 6: ',0
-PRESS_ENTER_MESSAGE        DC.B    'Please press enter to display more',CR,LF,CR,LF0
+PRESS_ENTER_MESSAGE        DC.B    'Please press enter to display more',CR,LF,CR,LF,0
 ERROR_MESSAGE_LENGTH_GREATER   DC.B    'Please re-enter the address with length less than 6',0
 ERROR_MESSAGE_LENGTH_EQUAL     DC.B    'Please enter something here for the first address',0
 StartingAddress     DC.L    1
