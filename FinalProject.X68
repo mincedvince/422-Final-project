@@ -533,30 +533,86 @@ EFFECTIVE_ADDRESS_DECODE
     RTS
     
 EFFECTIVE_ADDRESS_INDEX
-            JMP     EAIndex000
-            JMP     EAIndex001
-            JMP     EAIndex010
-            JMP     EAIndex011
-            JMP     EAIndex100
-            JMP     EAIndex101
-            JMP     EAIndex110
-            JMP     EAIndex111
+            JMP     EFFECTIVE_ADRESS_INDEX000
+            JMP     EFFECTIVE_ADRESS_INDEX001
+            JMP     EFFECTIVE_ADRESS_INDEX010
+            JMP     EFFECTIVE_ADRESS_INDEX011
+            JMP     EFFECTIVE_ADRESS_INDEX100
+            JMP     EFFECTIVE_ADRESS_INDEX101
+            JMP     EFFECTIVE_ADRESS_INDEX110
+            JMP     EFFECTIVE_ADRESS_INDEX111 
+EFFECTIVE_ADRESS_Index000
+    MOVE    D2,D0
+    ANDI    #7,D0
+    *BSR    SEND DATA TO BUFFER
+    RTS
     
-EAIndex000
-*FINISH THESE
-EAIndex001
+EFFECTIVE_ADRESS_Index001
+    MOVE    D2,D0
+    ANDI    #7,D0
+    *BSR    SEND DATA TO BUFFER
+    RTS
+    
+EFFECTIVE_ADRESS_Index010
+    MOVE.W  #FIRST_BRACE,(A4)+
+    CLR.L   D0
+    MOVE    D2,D0
+    ANDI    #7,D0
+    *BSR    SEND DATA TO BUFFER
+    MOVE.W  #LAST_BRACE,(A4)+
+    RTS
 
-EAIndex010
+EFFECTIVE_ADRESS_Index011
+    MOVE.W  #FIRST_BRACE,(A4)+
+    CLR.L   D0
+    MOVE    D2,D0
+    ANDI    #7,D0
+    *BSR    SEND DATA TO BUFFER
+    MOVE.W  #LAST_BRACE,(A4)+
+    MOVE.W  #ADD_SIGN,(A4)+
+    RTS
 
-EAIndex011
+EFFECTIVE_ADRESS_Index100
 
-EAIndex100
 
-EAIndex101
 
-EAIndex110
+EFFECTIVE_ADRESS_Index101
 
-EAIndex111
+
+
+EFFECTIVE_ADRESS_Index110
+
+
+
+EFFECTIVE_ADRESS_Index111
+
+*---------------------------------------------EA-LIBRARY----------------------------------------------------*
+FIRST_BRACE             DC.B    '(',0
+LAST_BRACE              DC.B    ')',0
+COMMA_SIGN              DC.B    ',',0
+SLASH_SIGN              DC.B    '/',0
+HASH_SIGN               DC.B    '#',0
+MONEY_SIGN              DC.B    '$',0
+TAB_SIGN                DC.B    '   ',0
+ADD_SIGN                DC.B    '+',0
+SUBTRACT_SIGN           DC.B    '-',0
+WORD_EXTENSION          DC.B    '.W',0
+LONGWORD_EXTENSION      DC.B    '.L',0
+PROGRAM_COUNTER         DC.B    '(PC)',0
+FIRST_BRACE_SIZE        DC.W    1
+LAST_BRACE_SIZE         DC.W    1
+COMMA_SIGN_SIZE         DC.W    1
+SLASH_SIGN_SIZE         DC.W    1
+HASH_SIGN_SIZE          DC.W    1
+MONEY_SIGN_SIZE         DC.W    1
+TAB_SIGN_SIZE           DC.W    1
+ADD_SIGN_SIZE           DC.W    1
+SUBTRACT_SIGN_SIZE      DC.W    1
+WORD_EXTENSION_SIZE     DC.W    1
+LONGWORD_EXTENSION_SIZE DC.W    1
+PROGRAM_COUNTER_SIZE    DC.W    1
+WORD_TO_ASCII           DS.W    1
+
 
    
 *   Display error related to length
