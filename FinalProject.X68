@@ -123,22 +123,6 @@ PressEnter
 * D4 for third bit
 * D5 for forth bit
 CheckEA
-   * MOVE.W D1,D3    second bit ex AAAA BBBB CCCC DDDD
-   * LSL.W  #4,D3    shift current word value 4 bit left BBBB CCCC DDDD 0000
-   * LSR.W  #8,D3    shift current word value 8 bits right 0000 0000 BBBB CCCC
-   * LSR.W  #4,D3    shift current word value 4 bits right 0000 0000 0000 BBBB
-    *Done with D3
-   * MOVE.W D1,D4    third bit ex AAAA BBBB CCCC DDDD
-   * LSL.W  #8,D4    shift current word value 8 bits left CCCC DDDD 0000 0000
-   * LSR.W  #8,D4    shift current word value 8 bits right 0000 0000 CCCC DDDD
-   * LSR.W  #4,D4    shift current word value 4 bits right 0000 0000 0000 CCCC
-    *Done with D4
-   * MOVE.W D1,D5    forth bit ex AAAA BBBB CCCC DDDD
-   * LSL.W  #8,D5    shift current word value 8 bits left CCCC DDDD 0000 0000
-   * LSL.W  #4,D5    shift current word value 4 bits left DDDD 0000 0000 0000
-   * LSR.W  #8,D5    shift current word value 8 bits right 0000 0000 DDDD 0000
-   * LSR.W  #4,D5    shift current word value 4 bits right 0000 0000 0000 DDDD
-    *Done with D5
     
     MOVE.W D1,D3    second bit ex AAAA BBBB CCCC DDDD
     LSL.W  #8,D3    shift current word value 8bit left CCCC DDDD 0000 0000
