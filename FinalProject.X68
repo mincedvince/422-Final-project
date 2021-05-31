@@ -541,7 +541,44 @@ EXITJSR
 
 *   Subrountine that reads a user input and save them to address register as hexadecimal number. END *
 *-----------------------------------------------------------------------------------------------------------*
+*---------------------------------------------EA-ROUTINE----------------------------------------------------*
+EFFECTIVE_ADDRESS_DECODE
+    MOVEM.L A0-A3/A5/D0-D5/D7,-(SP)
+    LEA EFFECTIVE_ADDRESS_INDEX,A1
+    CLR.L   D1
+    MOVE.W  D0,D2
+    MOVE.B  #3,D1
+    LSR.W   D1,D0
+    MULU    #6,D0
+    JSR     00(A1,D0)
+    MOVEM.L (SP)+,A0-A3/A5/D0-D5/D7
+    RTS
+    
+EFFECTIVE_ADDRESS_INDEX
+            JMP     EAIndex000
+            JMP     EAIndex001
+            JMP     EAIndex010
+            JMP     EAIndex011
+            JMP     EAIndex100
+            JMP     EAIndex101
+            JMP     EAIndex110
+            JMP     EAIndex111
+    
+EAIndex000
+*FINISH THESE
+EAIndex001
 
+EAIndex010
+
+EAIndex011
+
+EAIndex100
+
+EAIndex101
+
+EAIndex110
+
+EAIndex111
 
    
 *   Display error related to length
