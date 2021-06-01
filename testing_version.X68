@@ -550,6 +550,26 @@ ADD_13
     JSR ADD_Opmode
     
   *Not complete
+ 
+*-----------------------------------------------------------------------------------------------------------*
+
+
+LSR_14
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$53,(A4)+ S
+    MOVE.B #$52,(A4)+ R
+    MOVE.B #$2E,(A4)+ .
+      *Not complete
+
+ *-----------------------------------------------------------------------------------------------------------*
+
+    
+DATA
+    MOVE.B #$44,(A4)+ D
+    MOVE.B #$41,(A4)+ A
+    MOVE.B #$54,(A4)+ T
+    MOVE.B #$41,(A4)+ A
+  *Not complete
 
 *-----------------------------------------------------------------------------------------------------------*
     
@@ -574,40 +594,89 @@ ADD_Opmode
 
 ADD_GetSize_0
     MOVE.B #$42,(A4)+ B
+    MOVE.B #$9,(A4)+  Tab    
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7    
+    JSR RetrieveEA
+  
+    MOVE.B #$2C,(A4)+ ,    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+
+ADD_GetSize_1
+    MOVE.B #$57,(A4)+ W
     MOVE.B #$9,(A4)+  Tab
+    
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
-    MOVE.B #$
-    MOVE.B #$
-    MOVE.B #$
-
-ADD_GetSize_1
-ADD_GetSize_2
-ADD_GetSize_4
-ADD_GetSize_5
-ADD_GetSize_6
- 
-*-----------------------------------------------------------------------------------------------------------*
-
-
-LSR_14
-    MOVE.B #$4C,(A4)+ L
-    MOVE.B #$53,(A4)+ S
-    MOVE.B #$52,(A4)+ R
-    MOVE.B #$2E,(A4)+ .
-      *Not complete
-
- *-----------------------------------------------------------------------------------------------------------*
-
     
-DATA
-    MOVE.B #$44,(A4)+ D
-    MOVE.B #$41,(A4)+ A
-    MOVE.B #$54,(A4)+ T
-    MOVE.B #$41,(A4)+ A
-  *Not complete
+    MOVE.B #$2C,(A4)+ ,    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+    
+ADD_GetSize_2
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    
+    MOVE.B #$2C,(A4)+ ,
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
+ADD_GetSize_4
+    MOVE.B #$42,(A4)+ B
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+    
+ADD_GetSize_5
+    MOVE.B #$57,(A4)+ W
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+
+ADD_GetSize_6
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+    
+*-----------------------------------------------------------------------------------------------------------*    
 * Jump table subrountine that read and identify which instuction the opcode is belong to. END*
 *-----------------------------------------------------------------------------------------------------------*
 
