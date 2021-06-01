@@ -782,16 +782,3 @@ PrintLimit          DC.B    2
 CurrentLine         DC.B    1
 CombineOperation    DC.L    1
     END    START        ; last line of source
-    
-    
-
-
-
-
-
-
-
-
-
-
-
