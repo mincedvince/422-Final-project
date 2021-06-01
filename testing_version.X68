@@ -1,7 +1,7 @@
 *A1 loading and displaying messages for trap
 *D0 currently use for trap task
 *D1 currently use to store string length
-*Currently not use D2-D7, A2-A7
+*Currently not use D2-D7, A2-A7111111111
     ORG    $1000
 START:                  ; first instruction of program
 *   Welcome Message 
