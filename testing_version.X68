@@ -489,7 +489,7 @@ BLT_6
     MOVE.B #$54,(A4)+ T
     *Get Size and Syntax
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JSR  Opcode_Opmode
+    BRA  Opcode_Opmode
     
   *Not complete
 
@@ -501,7 +501,7 @@ OR_8
     MOVE.B #$2E,(A4)+ .
     *Get Size and Syntax
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JSR  Opcode_Opmode
+    BRA  Opcode_Opmode
     
   *Not complete
     
@@ -514,7 +514,7 @@ CMP_11
     MOVE.B #$2E,(A4)+ .
     *Get Size and Syntax
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JSR  Opcode_Opmode
+    BRA  Opcode_Opmode
     
   *Not complete
 
@@ -528,7 +528,7 @@ AND_12
     MOVE.B #$2E,(A4)+ .
     *Get Size and Syntax
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JSR  Opcode_Opmode
+    BRA  Opcode_Opmode
 
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -540,7 +540,7 @@ ADD_13
     
     *Get Size and Syntax
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JSR Opcode_Opmode
+    BRA Opcode_Opmode
     
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -574,7 +574,7 @@ DATA
    BEQ GetSize_2
 
    CMP.B #4,D2 100 byte second syntax
-    BEQ GetSize_4
+   BEQ GetSize_4
 
    CMP.B #5,D2 101 word second syntax
    BEQ GetSize_5
