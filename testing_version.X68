@@ -497,25 +497,6 @@ BLT_6
     JSR ADD_Opmode
     
   *Not complete
-ADD_Opmode
-   CMP.B #0,D2 000 byte first syntax
-   BEQ ADD_GetSize_0
-   
-   CMP.B #1,D2 001 word first syntax
-   BEQ ADD_GetSize_1
-
-   CMP.B #2,D2 010 long first syntax
-   BEQ ADD_GetSize_2
-
-   CMP.B #4,D2 100 byte second syntax
-    BEQ ADD_GetSize_4
-
-   CMP.B #5,D2 101 word second syntax
-   BEQ ADD_GetSize_5
-
-   CMP.B #6,D2 110 long second syntax
-   BEQ ADD_GetSize_6
-
 
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -528,24 +509,6 @@ OR_8
     JSR ADD_Opmode
     
   *Not complete
-ADD_Opmode
-   CMP.B #0,D2 000 byte first syntax
-   BEQ ADD_GetSize_0
-   
-   CMP.B #1,D2 001 word first syntax
-   BEQ ADD_GetSize_1
-
-   CMP.B #2,D2 010 long first syntax
-   BEQ ADD_GetSize_2
-
-   CMP.B #4,D2 100 byte second syntax
-    BEQ ADD_GetSize_4
-
-   CMP.B #5,D2 101 word second syntax
-   BEQ ADD_GetSize_5
-
-   CMP.B #6,D2 110 long second syntax
-   BEQ ADD_GetSize_6
     
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -559,24 +522,6 @@ CMP_11
     JSR ADD_Opmode
     
   *Not complete
-ADD_Opmode
-   CMP.B #0,D2 000 byte first syntax
-   BEQ ADD_GetSize_0
-   
-   CMP.B #1,D2 001 word first syntax
-   BEQ ADD_GetSize_1
-
-   CMP.B #2,D2 010 long first syntax
-   BEQ ADD_GetSize_2
-
-   CMP.B #4,D2 100 byte second syntax
-    BEQ ADD_GetSize_4
-
-   CMP.B #5,D2 101 word second syntax
-   BEQ ADD_GetSize_5
-
-   CMP.B #6,D2 110 long second syntax
-   BEQ ADD_GetSize_6
 
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -591,27 +536,8 @@ AND_12
     JSR ADD_Opmode
     
   *Not complete
-ADD_Opmode
-   CMP.B #0,D2 000 byte first syntax
-   BEQ ADD_GetSize_0
-   
-   CMP.B #1,D2 001 word first syntax
-   BEQ ADD_GetSize_1
-
-   CMP.B #2,D2 010 long first syntax
-   BEQ ADD_GetSize_2
-
-   CMP.B #4,D2 100 byte second syntax
-    BEQ ADD_GetSize_4
-
-   CMP.B #5,D2 101 word second syntax
-   BEQ ADD_GetSize_5
-
-   CMP.B #6,D2 110 long second syntax
-   BEQ ADD_GetSize_6
 
 *-----------------------------------------------------------------------------------------------------------*
-
 
 ADD_13
     MOVE.B #$41,(A4)+ A
@@ -624,6 +550,9 @@ ADD_13
     JSR ADD_Opmode
     
   *Not complete
+
+*-----------------------------------------------------------------------------------------------------------*
+    
 ADD_Opmode
    CMP.B #0,D2 000 byte first syntax
    BEQ ADD_GetSize_0
@@ -658,8 +587,6 @@ ADD_GetSize_2
 ADD_GetSize_4
 ADD_GetSize_5
 ADD_GetSize_6
-    
-
  
 *-----------------------------------------------------------------------------------------------------------*
 
