@@ -769,6 +769,15 @@ WELCOME_MESSAGE DC.B '-------------A Disassembler for the Motorola MC68000 Micro
                 DC.B '- Vincent Le',CR,LF
                 DC.B '- Jibran Ahmed',CR,LF
                 DC.B '- Duy Vu',CR,LF
+                DC.B '||                                                        ||',CR,LF
+                DC.B '||   #####      ###    ##   ##                            ||',CR,LF
+                DC.B '||  ##        ##   ##  ## ##                              ||',CR,LF
+                DC.B '|| ## ####     #####   ####                               ||',CR,LF
+                DC.B '|| ##    ##  ##    ##  ####                               ||',CR,LF
+                DC.B '|| ##    ##  ##    ##  ## ##                              ||',CR,LF
+                DC.B '||  #####     ######   ##  ##                             ||',CR,LF
+                DC.B '||                                                        ||',CR,LF
+
                 DC.B 'To start program please enter the starting and ending addresses asked below',CR,LF,CR,LF,0
   
 STARTING_ADDRESS_MESSAGE   DC.B    'Please enter the starting address hexadecimal length of 6: ',0
