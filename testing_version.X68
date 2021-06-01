@@ -565,22 +565,22 @@ DATA
 *-----------------------------------------------------------------------------------------------------------*
  Opcode_Opmode
    CMP.B #0,D2 000 byte first syntax
-   BEQ ADD_GetSize_0
+   BEQ GetSize_0
    
    CMP.B #1,D2 001 word first syntax
-   BEQ ADD_GetSize_1
+   BEQ GetSize_1
 
    CMP.B #2,D2 010 long first syntax
-   BEQ ADD_GetSize_2
+   BEQ GetSize_2
 
    CMP.B #4,D2 100 byte second syntax
-    BEQ ADD_GetSize_4
+    BEQ GetSize_4
 
    CMP.B #5,D2 101 word second syntax
-   BEQ ADD_GetSize_5
+   BEQ GetSize_5
 
    CMP.B #6,D2 110 long second syntax
-   BEQ ADD_GetSize_6
+   BEQ GetSize_6
 
 GetSize_0
     MOVE.B #$42,(A4)+ B
