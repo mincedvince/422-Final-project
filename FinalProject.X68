@@ -478,6 +478,18 @@ JSR
     MOVE.B #$52,(A4)+ R
     MOVE.B #$9,(A4)+   Tab for space
 
+    *source
+    MOVE.B D3,D2       move source register to D2
+    MOVE.B D4,D7       move source mode to D7
+    JSR RetrieveEA
+    
+    MOVE.B #$2C,(A4)+  *,
+    
+    *destination
+    MOVE.B D6,D2       move destination register to D2
+    MOVE.B D5,D7       move destination mode to D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
 
 RTS
@@ -486,6 +498,18 @@ RTS
     MOVE.B #$53,(A4)+ S    
     MOVE.B #$9,(A4)+   Tab for space
 
+    *source
+    MOVE.B D3,D2       move source register to D2
+    MOVE.B D4,D7       move source mode to D7
+    JSR RetrieveEA
+    
+    MOVE.B #$2C,(A4)+  *,
+    
+    *destination
+    MOVE.B D6,D2       move destination register to D2
+    MOVE.B D5,D7       move destination mode to D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
 MOVEM
     MOVE.B #$4D,(A4)+ M
