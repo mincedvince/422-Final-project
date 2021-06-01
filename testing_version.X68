@@ -445,14 +445,38 @@ JSR
     MOVE.B #$4A,(A4)+ J
     MOVE.B #$53,(A4)+ S
     MOVE.B #$52,(A4)+ R
-          *Not complete
+    MOVE.B #$9,(A4)+   Tab for space
+    
+    *source
+    MOVE.B D3,D2       move source register to D2
+    MOVE.B D4,D7       move source mode to D7
+    JSR RetrieveEA
+    
+    *destination
+    MOVE.B #$2C,(A4)+  *,
+    MOVE.B D6,D2       move destination register to D2
+    MOVE.B D5,D7       move destination mode to D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
 
 RTS
     MOVE.B #$52,(A4)+ R
     MOVE.B #$54,(A4)+ T
     MOVE.B #$53,(A4)+ S    
-          *Not complete
+    MOVE.B #$9,(A4)+   Tab for space
+    
+    *source
+    MOVE.B D3,D2       move source register to D2
+    MOVE.B D4,D7       move source mode to D7
+    JSR RetrieveEA
+    
+    *destination
+    MOVE.B #$2C,(A4)+  *,
+    MOVE.B D6,D2       move destination register to D2
+    MOVE.B D5,D7       move destination mode to D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
 MOVEM
     MOVE.B #$4D,(A4)+ M
@@ -468,7 +492,29 @@ BLT_6
     MOVE.B #$42,(A4)+ B
     MOVE.B #$4C,(A4)+ L
     MOVE.B #$54,(A4)+ T
-      *Not complete
+    *Get Size and Syntax
+    MOVE.B D5,D2    move destination mode from D5 to D2 for checking
+    JSR ADD_Opmode
+    
+  *Not complete
+ADD_Opmode
+   CMP.B #0,D2 000 byte first syntax
+   BEQ ADD_GetSize_0
+   
+   CMP.B #1,D2 001 word first syntax
+   BEQ ADD_GetSize_1
+
+   CMP.B #2,D2 010 long first syntax
+   BEQ ADD_GetSize_2
+
+   CMP.B #4,D2 100 byte second syntax
+    BEQ ADD_GetSize_4
+
+   CMP.B #5,D2 101 word second syntax
+   BEQ ADD_GetSize_5
+
+   CMP.B #6,D2 110 long second syntax
+   BEQ ADD_GetSize_6
 
 
 *-----------------------------------------------------------------------------------------------------------*
@@ -477,7 +523,29 @@ OR_8
     MOVE.B #$4F,(A4)+ O
     MOVE.B #$52,(A4)+ R
     MOVE.B #$2E,(A4)+ .
+    *Get Size and Syntax
+    MOVE.B D5,D2    move destination mode from D5 to D2 for checking
+    JSR ADD_Opmode
+    
   *Not complete
+ADD_Opmode
+   CMP.B #0,D2 000 byte first syntax
+   BEQ ADD_GetSize_0
+   
+   CMP.B #1,D2 001 word first syntax
+   BEQ ADD_GetSize_1
+
+   CMP.B #2,D2 010 long first syntax
+   BEQ ADD_GetSize_2
+
+   CMP.B #4,D2 100 byte second syntax
+    BEQ ADD_GetSize_4
+
+   CMP.B #5,D2 101 word second syntax
+   BEQ ADD_GetSize_5
+
+   CMP.B #6,D2 110 long second syntax
+   BEQ ADD_GetSize_6
     
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -486,7 +554,29 @@ CMP_11
     MOVE.B #$4D,(A4)+ M
     MOVE.B #$50,(A4)+ P
     MOVE.B #$2E,(A4)+ .
-      *Not complete
+    *Get Size and Syntax
+    MOVE.B D5,D2    move destination mode from D5 to D2 for checking
+    JSR ADD_Opmode
+    
+  *Not complete
+ADD_Opmode
+   CMP.B #0,D2 000 byte first syntax
+   BEQ ADD_GetSize_0
+   
+   CMP.B #1,D2 001 word first syntax
+   BEQ ADD_GetSize_1
+
+   CMP.B #2,D2 010 long first syntax
+   BEQ ADD_GetSize_2
+
+   CMP.B #4,D2 100 byte second syntax
+    BEQ ADD_GetSize_4
+
+   CMP.B #5,D2 101 word second syntax
+   BEQ ADD_GetSize_5
+
+   CMP.B #6,D2 110 long second syntax
+   BEQ ADD_GetSize_6
 
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -496,7 +586,29 @@ AND_12
     MOVE.B #$4E,(A4)+ N
     MOVE.B #$44,(A4)+ D
     MOVE.B #$2E,(A4)+ .
+    *Get Size and Syntax
+    MOVE.B D5,D2    move destination mode from D5 to D2 for checking
+    JSR ADD_Opmode
+    
   *Not complete
+ADD_Opmode
+   CMP.B #0,D2 000 byte first syntax
+   BEQ ADD_GetSize_0
+   
+   CMP.B #1,D2 001 word first syntax
+   BEQ ADD_GetSize_1
+
+   CMP.B #2,D2 010 long first syntax
+   BEQ ADD_GetSize_2
+
+   CMP.B #4,D2 100 byte second syntax
+    BEQ ADD_GetSize_4
+
+   CMP.B #5,D2 101 word second syntax
+   BEQ ADD_GetSize_5
+
+   CMP.B #6,D2 110 long second syntax
+   BEQ ADD_GetSize_6
 
 *-----------------------------------------------------------------------------------------------------------*
 
