@@ -247,11 +247,6 @@ An_Indirect_Minus
 
 Address_Data
 
-
-    
-
-
-
 *-----------------------------------------------------------------------------------------------------------*
 
 
@@ -535,7 +530,108 @@ AND_12
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
     JSR ADD_Opmode
     
-  *Not complete
+AND_Opmode
+   CMP.B #0,D2 000 byte first syntax
+   BEQ ADD_GetSize_0
+   
+   CMP.B #1,D2 001 word first syntax
+   BEQ ADD_GetSize_1
+
+   CMP.B #2,D2 010 long first syntax
+   BEQ ADD_GetSize_2
+
+   CMP.B #4,D2 100 byte second syntax
+    BEQ ADD_GetSize_4
+
+   CMP.B #5,D2 101 word second syntax
+   BEQ ADD_GetSize_5
+
+   CMP.B #6,D2 110 long second syntax
+   BEQ ADD_GetSize_6
+
+AND_GetSize_0
+    MOVE.B #$42,(A4)+ B
+    MOVE.B #$9,(A4)+  Tab    
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7    
+    JSR RetrieveEA
+  
+    MOVE.B #$2C,(A4)+ ,    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+
+AND_GetSize_1
+    MOVE.B #$57,(A4)+ W
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    
+    MOVE.B #$2C,(A4)+ ,    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+    
+AND_GetSize_2
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    
+    MOVE.B #$2C,(A4)+ ,
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+
+AND_GetSize_4
+    MOVE.B #$42,(A4)+ B
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+    
+AND_GetSize_5
+    MOVE.B #$57,(A4)+ W
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
+
+AND_GetSize_6
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$9,(A4)+  Tab
+    
+    MOVE.B D3,D2 move source register to D2
+    MOVE.B D4,D7 move source mode to D7
+    JSR RetrieveEA
+    MOVE.B #$2C,(A4)+ ,
+    
+    MOVE.B D6,D2
+    MOVE.B #$0,D7
+    JSR RetrieveEA
+    BRA Combine_Done
 
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -549,31 +645,7 @@ ADD_13
     MOVE.B D5,D2    move destination mode from D5 to D2 for checking
     JSR ADD_Opmode
     
-  *Not complete
- 
-*-----------------------------------------------------------------------------------------------------------*
-
-
-LSR_14
-    MOVE.B #$4C,(A4)+ L
-    MOVE.B #$53,(A4)+ S
-    MOVE.B #$52,(A4)+ R
-    MOVE.B #$2E,(A4)+ .
-      *Not complete
-
- *-----------------------------------------------------------------------------------------------------------*
-
-    
-DATA
-    MOVE.B #$44,(A4)+ D
-    MOVE.B #$41,(A4)+ A
-    MOVE.B #$54,(A4)+ T
-    MOVE.B #$41,(A4)+ A
-  *Not complete
-
-*-----------------------------------------------------------------------------------------------------------*
-    
-ADD_Opmode
+    ADD_Opmode
    CMP.B #0,D2 000 byte first syntax
    BEQ ADD_GetSize_0
    
@@ -675,7 +747,28 @@ ADD_GetSize_6
     MOVE.B #$0,D7
     JSR RetrieveEA
     BRA Combine_Done
+ 
+*-----------------------------------------------------------------------------------------------------------*
+
+
+LSR_14
+    MOVE.B #$4C,(A4)+ L
+    MOVE.B #$53,(A4)+ S
+    MOVE.B #$52,(A4)+ R
+    MOVE.B #$2E,(A4)+ .
+      *Not complete
+
+ *-----------------------------------------------------------------------------------------------------------*
+
     
+DATA
+    MOVE.B #$44,(A4)+ D
+    MOVE.B #$41,(A4)+ A
+    MOVE.B #$54,(A4)+ T
+    MOVE.B #$41,(A4)+ A
+  *Not complete
+
+*-----------------------------------------------------------------------------------------------------------*  
 *-----------------------------------------------------------------------------------------------------------*    
 * Jump table subrountine that read and identify which instuction the opcode is belong to. END*
 *-----------------------------------------------------------------------------------------------------------*
