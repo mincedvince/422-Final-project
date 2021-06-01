@@ -1,10 +1,3 @@
-***
-*-----------------------------------------------------------
-* Title      :
-* Written by :
-* Date       :
-* Description:
-*-----------------------------------------------------------
 *A1 loading and displaying messages for trap
 *D0 currently use for trap task
 *D1 currently use to store string length
