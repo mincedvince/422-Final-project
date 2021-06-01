@@ -239,7 +239,48 @@ An_Indirect_Minus
     RTS
 
 Address_Data
+    CMP.B #$0,D2 Word address
+    BRA WordAddress
+    CMP.B #$1,D2 Longword address
+    BRA LongwordAddress
+    CMP.B #$4,D2 immediate data
+    BRA ImmediateData
+WordAddress
+    MOVE.B  #$24,(A4)+ $ 
+    ADDQ #2,A2 increment current reading address by 2 to get the next word or long value
+    MOVE.W (A2),(A4)+ read in word address to buffer for printing
+    RTS
+    
+LongwordAddress
+    MOVE.B #$24,(A4)+ $
+    ADDQ #2,A2 increment current reading address by 2 to get the next word or long value
+    MOVE.L (A2),(A4)+ read in long address to buffer for printing
+    ADDQ #2,A2 increment current reading address by 2 before adding two more for the next operation
+    RTS
+ImmediateData
+    MOVE.B #$23,(A4)+ #
+    MOVE.B #$24,(A4)+ $
+    CMP.B #1,D0 for byte
+    BEQ byteID
+    CMP.B #2,D0 for word
+    BEQ wordID
+    CMP.B #3,D0 for longword
+    BEQ longID
+    
+byteID  
+    ADDQ #2,A2  increment current reading address by 2 to get the next word or long value
+    MOVE.W (A2),(A4)+ copy word data into buffer for printing
+    RTS
+    
+wordID
+    ADDQ #2,A2  increment current reading address by 2 to get the next word or long value
+    MOVE.W  (A2),(A4)+ copy word data into buffer for printing
+    RTS
 
+longID
+    ADDQ #3,A2 increment current reading address by 2 to get the next word or long value
+    MOVE.L (A2),(A4)+
+    RTS
 *-----------------------------------------------------------------------------------------------------------*
 
 
@@ -529,7 +570,9 @@ DATA
     MOVE.B #$41,(A4)+ A
     MOVE.B #$54,(A4)+ T
     MOVE.B #$41,(A4)+ A
-  *Not complete
+    MOVE.B #$9,(A4)+ Tab
+    MOVE.B D1,(A4)+ store whole opcode for error printing
+    RTS
 
 *-----------------------------------------------------------------------------------------------------------*
 OPCODE_OPMODE_
@@ -554,7 +597,7 @@ OPCODE_OPMODE_
 GetSize_0
     MOVE.B #$42,(A4)+ B
     MOVE.B #$9,(A4)+  Tab    
-    
+    MOVE.B #1,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7    
     JSR RetrieveEA
@@ -568,7 +611,7 @@ GetSize_0
 GetSize_1
     MOVE.B #$57,(A4)+ W
     MOVE.B #$9,(A4)+  Tab
-    
+    MOVE.B #2,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
@@ -582,7 +625,7 @@ GetSize_1
 GetSize_2
     MOVE.B #$4C,(A4)+ L
     MOVE.B #$9,(A4)+  Tab
-    
+    MOVE.B #3,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
@@ -596,7 +639,7 @@ GetSize_2
 GetSize_4
     MOVE.B #$42,(A4)+ B
     MOVE.B #$9,(A4)+  Tab
-    
+    MOVE.B #1,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
@@ -610,7 +653,7 @@ GetSize_4
 GetSize_5
     MOVE.B #$57,(A4)+ W
     MOVE.B #$9,(A4)+  Tab
-    
+    MOVE.B #2,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
@@ -624,7 +667,7 @@ GetSize_5
 GetSize_6
     MOVE.B #$4C,(A4)+ L
     MOVE.B #$9,(A4)+  Tab
-    
+    MOVE.B #3,D0
     MOVE.B D3,D2 move source register to D2
     MOVE.B D4,D7 move source mode to D7
     JSR RetrieveEA
@@ -686,8 +729,6 @@ LETTER
     SUBI.B #$37,D2
     BRA COMBINE    Branch to combine to begin the process
     
-    
-
 NOTVALID
     MOVEA.L #$00000000,A7 Error in conversion, set A7 to 000000 for error
     RTS  return from subroutine
