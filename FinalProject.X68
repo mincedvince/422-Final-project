@@ -82,12 +82,12 @@ OpcodeProcess
     LEA CombineOperation,A4 load address of the buffer into A4 for storing instruction to print
     JSR CheckEA     jump to subroutine to check effective address
     JSR JumpTable   jump to subroutine to check opcode
-    MOVE.B #$00,(A4)
+    MOVE.B #$00,(A4)+
     LEA CombineOperation,A1 
     MOVE.B #13,D0    Display the NULL terminated string at (A1) with CR, LF.
     TRAP #15
     ADD.B #1,CurrentLine increment current line by one for printing limit
-    ADDQ.L #2,A2   increment current memory location by 2 for the next word or byte.
+    ADDQ #2,A2   increment current memory location by 2 for the next word or byte.
     BRA Address_Loop
     
 PressEnter
@@ -218,14 +218,14 @@ An_Indirect
     MOVE.B #$41,(A4)+ A
     JSR RegisterJumpTable
     MOVE.B D2,(A4)+ register number
-    MOVE.B #$28,(A4)+ )
+    MOVE.B #$29,(A4)+ )
     RTS
 An_Indirect_Plus
     MOVE.B #$28,(A4)+ (
     MOVE.B #$41,(A4)+ A
     JSR RegisterJumpTable
     MOVE.B D2,(A4)+ register number
-    MOVE.B #$28,(A4)+ )
+    MOVE.B #$29,(A4)+ )
     MOVE.B #$2B,(A4)+ +
     RTS
 
@@ -235,27 +235,29 @@ An_Indirect_Minus
     MOVE.B #$41,(A4)+ A
     JSR RegisterJumpTable
     MOVE.B D2,(A4)+ register number
-    MOVE.B #$28,(A4)+ )
+    MOVE.B #$29,(A4)+ )
     RTS
 
 Address_Data
     CMP.B #$0,D2 Word address
-    BRA WordAddress
+    BEQ WordAddress
     CMP.B #$1,D2 Longword address
-    BRA LongwordAddress
+    BEQ LongwordAddress
     CMP.B #$4,D2 immediate data
-    BRA ImmediateData
+    BEQ ImmediateData
 WordAddress
     MOVE.B  #$24,(A4)+ $ 
-    ADDQ #2,A2 increment current reading address by 2 to get the next word or long value
-    MOVE.W (A2),(A4)+ read in word address to buffer for printing
+    * current address is at the start of the opcode word for example -->1234 5678
+    ADDQ #2,A2 increment current reading address by 2 to get the next word or long value 1234 -->5678
+    JSR WordDecodeEA
+    SUBQ #2,A2
     RTS
     
 LongwordAddress
     MOVE.B #$24,(A4)+ $
     ADDQ #2,A2 increment current reading address by 2 to get the next word or long value
-    MOVE.L (A2),(A4)+ read in long address to buffer for printing
-    ADDQ #2,A2 increment current reading address by 2 before adding two more for the next operation
+    JSR LongDecodeEA
+    SUBQ #2,A2
     RTS
 ImmediateData
     MOVE.B #$23,(A4)+ #
@@ -269,17 +271,23 @@ ImmediateData
     
 byteID  
     ADDQ #2,A2  increment current reading address by 2 to get the next word or long value
-    MOVE.W (A2),(A4)+ copy word data into buffer for printing
+    JSR ByteDecodeEA
+    SUBQ #2,A2  reset for increment 
+    *need to decode
     RTS
     
 wordID
     ADDQ #2,A2  increment current reading address by 2 to get the next word or long value
-    MOVE.W  (A2),(A4)+ copy word data into buffer for printing
+    JSR WordDecodeEA
+    SUBQ #2,A2 reset for increment
+    *need to decode
     RTS
 
 longID
     ADDQ #3,A2 increment current reading address by 2 to get the next word or long value
-    MOVE.L (A2),(A4)+
+    JSR LongDecodeEA
+    SUBQ #2,A2 reset for increment 
+    *need to decode
     RTS
 *-----------------------------------------------------------------------------------------------------------*
 
@@ -337,11 +345,13 @@ JumpTable
     
     CMP.B #14,D2 LSR
     BEQ LSR_14
-    BRA DATA    instruction not found
+ToDATA BRA DATA    instruction not found
     
 Combine_Done   RTS
       
 RegisterJumpTable
+    CMP.B #0,D2
+    BEQ Register0
     CMP.B #1,D2
     BEQ Register1
     CMP.B #2,D2
@@ -356,6 +366,9 @@ RegisterJumpTable
     BEQ Register6
     CMP.B #7,D2
     BEQ Register7
+Register0
+    MOVE.B #$30,D2
+    RTS
 Register1
     MOVE.B #$31,D2
     RTS   
@@ -471,6 +484,7 @@ MOVEM_JRS_RTS_4
       LSR.W #6,D0 get the first 10 binary 
       CMP.W #$013A,D0 compare word value within D1 to 013A
       BEQ JSR
+      BRA ToDATA
       
 JSR
     MOVE.B #$4A,(A4)+ J
@@ -483,12 +497,7 @@ JSR
     MOVE.B D4,D7       move source mode to D7
     JSR RetrieveEA
     
-    MOVE.B #$2C,(A4)+  *,
-    
-    *destination
-    MOVE.B D6,D2       move destination register to D2
-    MOVE.B D5,D7       move destination mode to D7
-    JSR RetrieveEA
+        
     BRA Combine_Done
 
 
@@ -496,19 +505,6 @@ RTS
     MOVE.B #$52,(A4)+ R
     MOVE.B #$54,(A4)+ T
     MOVE.B #$53,(A4)+ S    
-    MOVE.B #$9,(A4)+   Tab for space
-
-    *source
-    MOVE.B D3,D2       move source register to D2
-    MOVE.B D4,D7       move source mode to D7
-    JSR RetrieveEA
-    
-    MOVE.B #$2C,(A4)+  *,
-    
-    *destination
-    MOVE.B D6,D2       move destination register to D2
-    MOVE.B D5,D7       move destination mode to D7
-    JSR RetrieveEA
     BRA Combine_Done
 
 MOVEM
@@ -525,10 +521,49 @@ BLT_6
     MOVE.B #$42,(A4)+ B
     MOVE.B #$4C,(A4)+ L
     MOVE.B #$54,(A4)+ T
-    *Get Size and Syntax
-    MOVE.B D5,D2    move destination mode from D5 to D2 for checking
-    JMP  OPCODE_OPMODE_
-    
+    MOVE.B #$9,(A4)+  tab
+CheckDisplacement
+   MOVE.W D1,D2 store current word from D1 to D2
+   LSL.W #8,D2 shift 8 bits to the left
+   LSR.W #8,D2 shift 8 bits back to the right
+   CMP.B #$00,D2 compare if the last to bits are 00 for displacement
+   BEQ Positive_Displacement 16 bits
+   BNE Negative_Displacement 8 bits
+   
+* Target=<PC>+2+displacement
+Positive_Displacement
+   ADD.L #2,A2 increment by 2 to get the next word
+   MOVE.W (A2),D2 get the word displacement into D2
+   MOVE.L A2,D1 move the current address to D1
+   ADD.L #2,D1  add 2 to the current address
+   ADD.L D2,D1  add current displacement to D1
+   *swap word
+   ROL.L #8,D1  rotate 8 bits left
+   ROL.L #8,D1  rotate 8 bits left
+   JSR DATA_CONVERT
+   ROR.L #8,D1 rotate 8 bits right
+   ROR.L #8,D1 rotate 8 bits right 
+   JSR DATA_CONVERT
+   RTS
+   
+* Target=<PC>+2+displacement
+* negative
+Negative_Displacement   
+    NOT.B D2    ones complement of value within D2
+    ADDQ #1,D2  add one to D2 for two complement
+    MOVE.L A2,D1 move the current address to D1
+    ADD.L #2,D1  add 2 to the current address
+    SUB.L D2,D1 add current displacement to D1
+*get first word first
+    ROL.L #8,D1 rotate 8 bits left
+    ROL.L #8,D1 rotate 8 bits left
+    JSR DATA_CONVERT
+*get second word
+    ROR.L #8,D1 rotate 8 bits right
+    ROR.L #8,D1 rotate 8 bits right
+    JSR DATA_CONVERT
+    RTS
+            
 *-----------------------------------------------------------------------------------------------------------*
 
 OR_8
@@ -595,7 +630,7 @@ DATA
     MOVE.B #$54,(A4)+ T
     MOVE.B #$41,(A4)+ A
     MOVE.B #$9,(A4)+ Tab
-    MOVE.B D1,(A4)+ store whole opcode for error printing
+    JSR DATA_CONVERT
     RTS
 
 *-----------------------------------------------------------------------------------------------------------*
@@ -708,16 +743,81 @@ GetSize_6
 
 *   Display memory location
 Display_Memory    
-    MOVE.L A2,D1    Store unsigned number in D1 for display
-    MOVE.B #16,D2   Set converted to number base 16
-    MOVE.B #15,D0   Use to display unsinged number, therefore memory location
-    TRAP #14
+    *MOVE.L A2,D1    Store unsigned number in D1 for display
+    *MOVE.B #16,D2   Set converted to number base 16
+    *MOVE.B #15,D0   Use to display unsinged number, therefore memory location
+    *TRAP #15
+    MOVE.L A2,PrintMemory
+    LEA PrintMemory,A5
+    LEA MemBuffer,A6
+    MOVE.B #0,D0 initialize for printing
+MemLoop
+    CMP.B #4,D0 if equal then loop is done
+    BEQ MemDone
+    MOVE.B (A5),D1 move current value for memory to D1 for converting first bit of byte
+    MOVE.B (A5),D2 move current value for memory to D1 for converting second bit of byte
+CheckByte
+    *first bits
+    LSR.B #4,D1 shift right to get rid of the second bit
+    CMP.B #10,D1 compare 9 with value within D1
+    BLT First_JumpNum if D1 is less than 9 then it is a number
+    CMP.B #9,D1 compare 9 with value within D1
+    BGT First_JumpLetter if D1 is greater than then it is a letter
+Next
+    *second bit
+    LSL.B #4,D2 shift left to get rid of the first bit
+    LSR.B #4,D2 shift right to get back to orginial position
+    CMP.B #9,D2 compare 9 with value within D2
+    BLT Second_JumpNum if D2 is less than 9 then it is a number
+    CMP.B #9,D2    compare 9 with value within D2
+    BGT Second_JumpLetter  if D2 is less than 9 then it is a letter
+
+           
+MemDone
+    MOVE.B #$00,(A6)+ put null and the end
+    LEA MemBuffer,A1
+    MOVE.B #14,D0
+    TRAP #15
+    
     MOVE.B #$9,D1   Tab
     MOVE.B #6,D0   Use to display unsinged number, therefore memory location
-    TRAP #14
+    TRAP #15
+    
+    CLR D1
+    CLR D2
+        
     RTS
     *continue here................
- 
+    
+First_JumpLetter
+    ADDI.B #55,D1 add 55 to current decimal to get the hex value 
+*process example 'A' in decimal is 10 add 55 = 65 which is A in hex 
+    MOVE.B D1,(A6)+ store current byte into the buffer
+    BRA Next
+    
+First_JumpNum
+    ADDI.B #$30,D1 add 30 to current decimal to get the hex value
+*process example '0' in decimal is 0 add 30 = 30 which is 0 in hex
+    MOVE.B D1,(A6)+
+    BRA Next
+    
+Second_JumpLetter
+    ADDI.B #55,D2
+*process example 'A' in decimal is 10 add 55 = 65 which is A in hex 
+    MOVE.B D2,(A6)+
+    ADDQ #1,A5 increment to read next value
+    ADDQ #1,D0 increment count to stop
+    BRA MemLoop loop back
+Second_JumpNum
+    ADDI.B #$30,D2 add 30 to current decimal to get the hex value
+*process example '0' in decimal is 0 add 30 = 30 which is 0 in hex
+    MOVE.B D2,(A6)+
+    ADDQ #1,A5 increment to read next value
+    ADDQ #1,D0 increment count to stop
+    BRA MemLoop loop back
+    
+
+    
 *-----------------------------------------------------------------------------------------------------------*
 *   Subrountine that reads a user input and save them to address register as hexadecimal number. START *
 *   A-F in hex is 41-46
@@ -776,8 +876,149 @@ EXITJSR
 *   Subrountine that reads a user input and save them to address register as hexadecimal number. END *
 *-----------------------------------------------------------------------------------------------------------*
 
+*-----------------------------------------------------------------------------------------------------------*
+*   Subroutine that decode effective address for word address, long address and immediate data for printing. START *
+* D1 is currently use to store opcode but it is not used unless opcode is unidentified
+* D0 is currently use to store flag for ea address but flag can be set again
+* D2 is currently use to store instruction mode but can be set again
+* D7 is currently use to store instruction register but can be set again
+ByteDecodeEA
+    CLR D1
+    CLR D0
+    MOVE.B #0,D7    initialize for printing
+    MOVE.B #1,D2    flag for byte
+Byte_Loop
+    CMP.B #2,D7     if equal then loop is done
+    BEQ EaDone
+    MOVE.B (A2),D1  move current word value from A2 address to D1
+    MOVE.B (A2),D0  move current word value from A2 address to D0
+    BRA EA_CHECKASCII
+WordDecodeEA
+    CLR D1
+    CLR D0
+    MOVE.B #0,D7    initialize for printing
+    MOVE.B #2,D2    flag for word
+Word_Loop
+    CMP.B #2,D7     if equal then loop is done
+    BEQ EaDone
+    MOVE.B (A2),D1  move current word value from A2 address to D1
+    MOVE.B (A2),D0  move current word value from A2 address to D0
+    BRA EA_CHECKASCII
+LongDecodeEA
+    CLR D1
+    CLR D0
+    MOVE.B #0,D7    initialize for printing
+    MOVE.B #4,D2    flag for long
+Long_Loop
+    CMP.B #4,D7 if equal then loop is done
+    BEQ EaDone  
+    MOVE.B (A2),D1  move current word value from A2 address to D1
+    MOVE.B (A2),D0  move current word value from A2 address to D0
+    BRA EA_CHECKASCII
+EA_CHECKASCII 
+    *First
+    LSR.B #4,D1 shift right to get rid of the second bit
+    CMP.B #9,D1 compare 9 with value within D1
+    BLT EA_First_JumpNum if D1 is less than 9 then it is a number
+    CMP.B #9,D1 compare 9 with value within D1
+    BGT EA_First_JumpLetter if D1 is greater than then it is a letter
+EA_Next
+    *Second
+    LSL.B #4,D0 shift left to get rid of the second bit
+    LSR.B #4,D0 shift right to get back to original position
+    CMP.B #9,D0 compare 9 with value within D1
+    BLT EA_Second_JumpNum if D1 is less than 9 then it is a number
+    CMP.B #9,D0 compare 9 with value within D1
+    BGT EA_Second_JumpLetter if D1 is greater than then it is a letter
 
-   
+EA_First_JumpNum
+    ADDI.B #$30,D1
+    MOVE.B D1,(A4)+
+    BRA EA_Next
+
+EA_First_JumpLetter
+    ADDI.B #55,D1
+    MOVE.B D1,(A4)+
+    BRA EA_Next
+    
+EA_Second_JumpNum
+    ADDI.B #$30,D0
+    MOVE.B D0,(A4)+
+    ADDQ   #1,A2    increment current address to read next byte
+    ADDQ   #1,D7
+    BRA    LoopTable 
+
+EA_Second_JumpLetter
+    ADDI.B #55,D0
+    MOVE.B D0,(A4)+
+    ADDQ   #1,A2    increment current address to read next byte
+    ADDQ   #1,D7
+    BRA LoopTable
+    
+LoopTable
+    CMP.B #1,D2 if equal 1 then go to byte loop
+    BEQ Byte_Loop
+    CMP.B #2,D2 if equal 2 then go to word loop
+    BEQ Word_Loop
+    CMP.B #4,D2 if equal 4 then go to long loop
+    BEQ Long_Loop
+EaDone
+    RTS
+*   Subroutine that decode effective address for word address, long address and immediate data for printing. END *
+*-----------------------------------------------------------------------------------------------------------*
+    
+
+*-----------------------------------------------------------------------------------------------------------*
+* D2 currently store the first bit of opcode word
+DATA_CONVERT
+    MOVE.W D1,D2
+    *get first bits
+    LSR.W #8,D2   shift right 8 bits
+    LSR.W #4,D2   shift right 4 bits
+    JSR DataJump
+    *get second bits
+    MOVE.W D1,D2
+    LSL.W #4,D2 shift left 4 bits to get rid of first value
+    LSR.W #4,D2 shift right 4 bits back
+    LSR.W #8,D2 shift right 8 bits
+    JSR DataJump
+    *get third bits
+    MOVE.W D1,D2
+    LSL.W #8,D2 shift left 8 bits to get rid of first,second value
+    LSR.W #8,D2 shift right 8 bits back
+    LSR.W #4,D2 shift right 4 right 
+    JSR DataJump
+    MOVE.W D1,D2
+    LSL.W #8,D2 shift left 8 bits to get rid of first,second 
+    LSL.W #4,D2 shift left 4 bits to get rid of third
+    LSR.W #8,D2 shift right 8 bits back
+    LSR.W #4,D2 shift left 4 bits back
+    JSR DataJump
+    RTS
+DataJump
+    CMP.B #10,D2
+    BLT Data_Num
+    CMP.B #9,D2
+    BGT Data_Letter
+
+Data_Num
+    ADDI.B #$30,D2
+    MOVE.B D2,(A4)+
+    RTS
+Data_Letter 
+    ADDI.B #55,D2
+    MOVE.B D2,(A4)+
+    RTS
+ 
+    
+
+
+
+
+
+
+*-----------------------------------------------------------------------------------------------------------*
+
 *   Display error related to length
 ERROR_LENGTH_EQUAL 
     LEA ERROR_MESSAGE_LENGTH_EQUAL,A1
@@ -823,5 +1064,13 @@ StartingAddress     DC.L    1
 EndingAddress       DC.L    1
 PrintLimit          DC.B    10
 CurrentLine         DC.B    1
-CombineOperation    DC.L    1
+PrintMemory         DC.L    1
+MemBuffer           DCB.B   9,0
+EABuffer            DC.B    1
+CombineOperation    DC.B    1
+
     END    START        ; last line of source
+
+
+
+
