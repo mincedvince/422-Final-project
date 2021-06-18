@@ -5,86 +5,48 @@ Team Members: Vincent Le, Duy Vu, Jibran Ahmed
 
 Program Description
 
-Our team divided the program into three main parts: Input/Output, Opcode, and Effective addressing. We came up with the best possible flowcharts for our design.
+Our team divided the program into three main parts: Input/Output, Opcode, and Effective addressing. 
+We came up with the best possible flowcharts for our design.
 
+I/O flow chart
+
+The disassembler was designed to be able to read input from the user. The user needs to input a valid 
+starting address and a valid ending address for the program to successfully to disassemble instructions. 
+Once the starting address and ending address are valid, they will be stored in address registers (A2 and A3). 
+The registers will be used when decoding the instructions. 
+
+Opcode flowchart
+
+The JSR is run to read the value from the register. Before jumping to subroutine JumpTable, we will determine the opcode. 
+In order to get the opcode all, we need to do is read the word value from the current memory into a data register and shift 
+it around until we get the first hex of the word. After that, we will now jump to subroutine to JumpTable and determine which 
+instruction it is using the opcode. If the following opcode is not in the directory, the opcode will display DATA instead. 
+When the appropriate opcode is found within the directory the bits will be stored in the data register for displaying. 
 
  
-Figure 1: I/O flow chart
-
-The disassembler was designed to be able to read input from the user. The user needs to input a valid starting address and a valid ending address for the program to successfully to disassemble instructions. Once the starting address and ending address are valid, they will be stored in address registers (A2 and A3). The registers will be used when decoding the instructions. 
-
-
-
-
-
-
-
-
-
- 
-Figure 2: Opcode flowchart
-
-The JSR is run to read the value from the register. Before jumping to subroutine JumpTable, we will determine the opcode. In order to get the opcode all, we need to do is read the word value from the current memory into a data register and shift it around until we get the first hex of the word. After that, we will now jump to subroutine to JumpTable and determine which instruction it is using the opcode.
-If the following opcode is not in the directory, the opcode will display DATA instead. When the appropriate opcode is found within the directory the bits will be stored in the data register for displaying. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Effective addressing flowchart
- 
-Figure 3: Effective addressing flowchart
 
-When the JSR jumps to the EA subroutine it will determine how the bits are shifted. The EA will check the next three bits in the CheckEA where the bits are shifted based on the source register (D3), source mode (D4), destination mode (D5), and destination register (D6). If the EA is not legal an error message will be displayed. If it is legal the current bits will be converted to binary. The EA will check the first three bits to find the correct source register. The process will continue with the word getting shifted three bits until all modes are converted. When the code is analyzed, it will RTS to the JSR to jump to the next subroutine. By breaking each EA into multiple set of 3 bits, we can easily identify which EA it is going to be using the EA jump table and decode it.
-
-
-
-
-
-
-
-
-
+When the JSR jumps to the EA subroutine it will determine how the bits are shifted. The EA will check the next three bits in the CheckEA 
+where the bits are shifted based on the source register (D3), source mode (D4), destination mode (D5), and destination register (D6). If the
+EA is not legal an error message will be displayed. If it is legal the current bits will be converted to binary. The EA will check the first 
+three bits to find the correct source register. The process will continue with the word getting shifted three bits until all modes are converted.
+When the code is analyzed, it will RTS to the JSR to jump to the next subroutine. By breaking each EA into multiple set of 3 bits, we can easily 
+identify which EA it is going to be using the EA jump table and decode it
 
 Display flowchart
  
-Figure 4: Display flowchart
-
-The disassembler will show the completed disassembled instructions. The subroutine is reached when the user inputs both addresses successfully. The program will print the first ten cases and then prompt the user to press enter to print ten more lines. 
+The disassembler will show the completed disassembled instructions. The subroutine is reached when the user inputs both addresses successfully. 
+The program will print the first ten cases and then prompt the user to press enter to print ten more lines. 
 
 Full combined flowchart (too big to fit on one page) 
 https://app.diagrams.net/#G1j_V3JaVPsl31mDf0P-RDLbf2qrgToTna 
 
-
-
-
-
-
-
-
-
+//
 
 Specifications 
-The disassembler converts a set of instructions and data into assembly language. It takes in a test program with user input for the address range. The disassembler will run the instructions in between the addresses until the end is reached. It is called a disassembler because it does the inverse of the assembler. The real assembler converts computer instructions into a pattern of bits. The computer can use the bits to perform basic operations. 
+The disassembler converts a set of instructions and data into assembly language. It takes in a test program with user input for the address range. 
+The disassembler will run the instructions in between the addresses until the end is reached. It is called a disassembler because it does the inverse 
+of the assembler. The real assembler converts computer instructions into a pattern of bits. The computer can use the bits to perform basic operations. 
 
 Opcode Table:
  
@@ -92,28 +54,22 @@ Opcode Table:
 Effective Address Table:
 Effective Address
 	Mode	Format
-Data Register Direct	000	Dn
-Address Register Direct	001	An
+Data Register Direct		000	Dn
+Address Register Direct		001	An
 Address Register Indirect	010	(An)
-Immediate Data	111	#<data>
+Immediate Data			111	#<data>
 Address Register Indirect
-Post Incrementing	011	(An)+
+Post Incrementing		011	(An)+
 Address Register Indirect
-Pre decrementing	100	-(An)
-Absolute Long Address	111	(xxx).L
-Absolute Word Address	111	(xxx).W
+Pre decrementing		100	-(An)
+Absolute Long Address		111	(xxx).L
+Absolute Word Address		111	(xxx).W
 
 
 Test Plan
 
-For our testing plan we chose a very simple way of testing. When we created the test file, we extensively checked every single opcode and effective addressing mode possible. We used the original test file given to us by Professor Kim. We removed instructions we did not need.
-
- 
-Figure 1: Example of CLR instructions in our test file
-
-
- 
-Figure 2: Example of MOVE instructions in our test file
+For our testing plan we chose a very simple way of testing. When we created the test file, we extensively checked every single opcode and effective
+addressing mode possible. We used the original test file given to us by Professor Kim. We removed instructions we did not need.
 
 The following table describes our I/O testing
 I/O Testing
@@ -126,18 +82,18 @@ Invalid ending address	failed
 The following table describes our Effective Address testing
 Effective Address Testing
 	Result
-Dn 	Passed
-An	Passed
-An_Indirect	Passed
+Dn 			Passed
+An			Passed
+An_Indirect		Passed
 An_Indirect_Plus	Passed
 An_Indirect_Minus	Passed
-Address_Data	Passed
-WordAddress	Passed
-LongwordAddress	Passed
-ImmediateData	Passed
-byteID	Passed
-wordID	Passed
-longID	Passed
+Address_Data		Passed
+WordAddress		Passed
+LongwordAddress		Passed
+ImmediateData		Passed
+byteID			Passed
+wordID			Passed
+longID			Passed
 
 Exceptions Report
 
@@ -153,6 +109,8 @@ May display as ASL or ASR even with restrictions. Will also display as DATA.
 I/O
 When we input our starting or ending address and enter a value less than 2000, the disassembler may run into errors and crash.
 
-We ran into difficulty when we first attempted coding the disassembler. We did not start coding the project until the week 4 progress report. We had to take a long time to learn how the easy68k syntax is used and how each opcode worked. The learning curve when it comes to this project is steep and it takes a long time until the project is fully grasped. 
+We ran into difficulty when we first attempted coding the disassembler. We did not start coding the project until the week 4 progress 
+report. We had to take a long time to learn how the easy68k syntax is used and how each opcode worked. The learning curve when it comes
+to this project is steep and it takes a long time until the project is fully grasped. 
 
 
